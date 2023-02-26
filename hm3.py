@@ -3,11 +3,13 @@ f = open('input3.txt', 'r')
 observations = []
 
 
-def time_taker(observation):
+# парсит информацию до момента пока не дойдем до новой звезды
+def line_parser(observation):
     res = []
     _line = f.readline()
     while _line[0] != 's':
         _answer = _line.split()
+        #добавляет в лист пару время-характеристика
         res.append([_answer[0][0:len(_answer[0]) - 1], int(_answer[1][0:len(_answer[1]) - 1])])
         _line = f.readline()
         if _line == '':
@@ -25,11 +27,21 @@ def sum_counter(observation):
     return _sum
 
 
-def swap_obser(observation1, observation2):
+def swap_observations(observation1, observation2):
     observation1[0], observation2[0] = observation2[0], observation1[0]
     observation1[1], observation2[1] = observation2[1], observation1[1]
     observation1[2], observation2[2] = observation2[2], observation1[2]
 
+
+def compare_dates(observation1, observation2):
+    year1, month1, day1 = observation1[1][0][0].split('-')
+    year2, month2, day2 = observation2[1][0][0].split('-')
+    if year1 * 10000 + month1 * 100 + day1 < year2 * 10000 + month2 * 100 + day2:
+        return 1
+    elif year1 * 10000 + month1 * 100 + day1 == year2 * 10000 + month2 * 100 + day2:
+        return 2
+    else:
+        return 3
 
 
 first_line = f.readline()
@@ -38,7 +50,7 @@ for line in f:
     answer = line.split()
     if answer[0] == 'characteristics:':
         observation = [name]
-        name_line = time_taker(observation)
+        name_line = line_parser(observation)
         if name_line is not None:
             name = str(name_line).split()[1]
         _sum = sum_counter(observation)
@@ -47,14 +59,13 @@ for line in f:
 
 for i in range(len(observations)):
     for j in range(i, len(observations)):
-        if observations[j][1][0][1] < observations[i][1][0][1]:
-            swap_obser(observations[j], observations[i])
-        elif observations[j][1][0][1] == observations[i][1][0][1] and observations[j][2] < observations[i][2]:
-            swap_obser(observations[j], observations[i])
-        elif observations[j][1][0][1] == observations[i][1][0][1] and observations[j][2] == observations[i][2] \
-            and len(observations[j][1]) > len(observations[i][1]):
-            swap_obser(observations[j], observations[i])
-
+        if compare_dates(observations[j], observations[i]) == 1:
+            swap_observations(observations[j], observations[i])
+        elif compare_dates(observations[j], observations[i]) == 2 and observations[j][2] < observations[i][2]:
+            swap_observations(observations[j], observations[i])
+        elif compare_dates(observations[j], observations[i]) == 2 and observations[j][2] == observations[i][2] \
+                and observations[j][1][0][1] > observations[i][1][0][1]:
+            swap_observations(observations[j], observations[i])
 
 for i in range(len(observations)):
     print('name:', observations[i][0])
