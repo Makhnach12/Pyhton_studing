@@ -1,24 +1,29 @@
+import json
+
 salaries = []
 persons = []
 
 
 def salary_counter(salary, name, pos):
-    if name + pos + salary not in persons:
-        salaries.append(float(salary[0:len(salary) - 1]))
-        persons.append(name + pos + salary)
+    if name + pos + str(salary) not in persons:
+        salaries.append(salary)
+        persons.append(name + pos + str(salary))
 
 
-f = open('input2.txt', 'r')
-name = ''
-pos = ''
-for line in f:
-    answer = line.split()
-    if answer[0] == 'salary:':
-        salary_counter(answer[1], name, pos)
-    elif answer[0] == 'name:':
-        name = answer[1]
-    elif answer[0] == 'position:':
-        pos = answer[1]
+def information_taker(text):
+    if type(text) is not list:
+        salary_counter(text['salary'], text['name'], text['position'])
+        if len(text['subordinates']) != 0:
+            information_taker(text['subordinates'])
+    else:
+        for i in text:
+            information_taker(i)
+
+
+with open('zad2.json', 'r') as f:
+    text = json.load(f)
+
+information_taker(text)
 print('Средняя зарплата:', sum(salaries) / len(salaries))
 salaries.sort()
 if len(salaries) % 2 == 1:

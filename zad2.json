@@ -1,0 +1,26 @@
+{
+  "name": "Nikita",
+  "position": "boss",
+  "salary": 568900,
+  "subordinates": [
+    {
+      "name": "Motya",
+      "position": "Rab",
+      "salary": 58900,
+      "subordinates": [
+        {
+          "name": "Seva",
+          "position": "hui",
+          "salary": 900,
+          "subordinates": []
+        }
+      ]
+    },
+    {
+      "name": "Nikita",
+      "position": "boss",
+      "salary": 568900,
+      "subordinates": []
+    }
+  ]
+}
