@@ -4,26 +4,26 @@ salaries = []
 persons = []
 
 
-def salary_counter(salary, name, pos):
+def process_salary(salary, name, pos):
     if name + pos + str(salary) not in persons:
         salaries.append(salary)
         persons.append(name + pos + str(salary))
 
 
-def information_taker(text):
-    if type(text) is not list:
-        salary_counter(text['salary'], text['name'], text['position'])
-        if len(text['subordinates']) != 0:
-            information_taker(text['subordinates'])
+def process_information(employee_list):
+    if type(employee_list) is not list:
+        process_salary(employee_list['salary'], employee_list['name'], employee_list['position'])
+        if len(employee_list['subordinates']) != 0:
+            process_information(employee_list['subordinates'])
     else:
-        for i in text:
-            information_taker(i)
+        for employee in employee_list:
+            process_information(employee)
 
 
 with open('zad2.json', 'r') as f:
     text = json.load(f)
 
-information_taker(text)
+process_information(text)
 print('Средняя зарплата:', sum(salaries) / len(salaries))
 salaries.sort()
 if len(salaries) % 2 == 1:
