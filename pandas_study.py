@@ -60,7 +60,13 @@ for column in list(df.columns)[:7]:
     df[column] = df[column].replace(np.NaN, '-')
 
 # 4 task
-df = df.drop_duplicates()
+duplicateRows = df[df.duplicated(subset=['student id'])]
+print(duplicateRows)
+df = df.drop_duplicates(subset=['student id'])
+duplicateRows = df[df.duplicated(subset=['student id'])]
+print(duplicateRows)
+df = df[df['race/ethnicity'] != '-']
+
 
 # 5 task
 df["mean score"] = (df["math score"] + df["reading score"] + df["writing score"]) / 3
